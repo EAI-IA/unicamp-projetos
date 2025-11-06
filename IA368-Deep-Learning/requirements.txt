@@ -1,0 +1,3 @@
+# Dentro del contenedor
+pip install --upgrade pip
+pip install ultralytics opencv-python matplotlib
