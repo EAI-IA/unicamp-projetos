@@ -47,3 +47,25 @@
 
 
 
+| Agente    | Nome                                    | Responsabilidades                                                                                                    | Observações                              |
+|-----------|-----------------------------------------|----------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+|  Agente 1 | **Agente de Linguagem (LLM Principal)** | - Interpretar o turno do usuário<br>- Decidir quando chamar ferramentas MCP<br>- Gerar respostas ou planos | Atua como **planner cognitivo**                    |
+|  Agente 2 | **Agente de Memória**                   | - Gerenciar o JSON persistente<br>- Responder ao MCP (`get_memory`, `update_memory`)<br>- Manter coerência da memória | Pode ser implementado como módulo Python ou micro-serviço |
+|  Agente 3 | **Agente Publicador ROS 2**             | - Receber comandos do MCP<br>- Publicar ações simbólicas em ROS 2<br>- Manter logs dos planos                         | Interface entre MCP e o ambiente ROS 2  |
+
+
+
+| ID | Persona (perfil) | Diálogo (resumido) |
+|----|------------------|--------------------|
+| 0  | - Gosto de caçar<br>- Remodelei casas<br>- Meu feriado favorito é Halloween | Usuário: Oi, tudo bem?<br>Agente: Vou treinar perseguição de chitas!<br>Usuário: Você deve ser rápido. Eu adoro caça.<br>Agente: Também gosto de fazer artesanato.<br>Usuário: Legal! Qual sua comida favorita?<br>Agente: Prime rib. E você?<br>Usuário: Frango e macarrão com queijo. |
+| 1  | - Tenho 4 irmãs<br>- Acredito em sereias<br>- Amo chá gelado | Usuário: Oi!<br>Agente: Estou com minhas irmãs.<br>Usuário: Vejo Game of Thrones.<br>Agente: Eu também, tomando iced tea.<br>Usuário: O que você faz da vida?<br>Agente: Pesquiso sereias! |
+| 2  | - Sou comediante stand-up<br>- Vim de cidade pequena<br>- Bebo Cuba Libre | Usuário: Bom dia!<br>Agente: Isso vira um ótimo texto de stand-up!<br>Usuário: Que séries você fez?<br>Agente: Várias pequenas participações.<br>Usuário: Bebo mojito.<br>Agente: Prefiro Cuba Libre. |
+
+
+| Resultado Pretendido | Descrição | Como se Observa no Sistema |
+|----------------------|-----------|-----------------------------|
+| **1. Maior Coerência do Diálogo** | Respostas mais consistentes com o perfil (persona) e histórico. | O agente usa o JSON + MCP antes de responder. |
+| **2. Memória Dinâmica Correta** | Lembrar mudanças de estado (ex.: objetos movidos). | Responde corretamente perguntas futuras sobre eventos registrados. |
+| **3. Ações Simbólicas Corretas** | Geração de ações planejadas adequadas ao diálogo. | Ação correta publicada no nó ROS 2 (ex.: `remember_object_change`). |
+| **4. Redução de Erros de Alucinação** | Menos invenções e contradições. | O agente baseia respostas em memória persistente, não imagina fatos. |
+| **5. Melhor Eficiência Cognitiva** | Usa apenas a memória necessária, sem excessos. | Menor número de chamadas MCP desnecessárias (`get_memory`, `update_memory`). |
